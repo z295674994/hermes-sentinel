@@ -1,0 +1,131 @@
+# Hermes Sentinel 配置
+# 使用 DeepSeek V4 Pro 编写
+
+# === 环境切换（改这一行即可切换测试网/主网）===
+env: testnet  # testnet | mainnet
+
+# === 币安端点（所有URL集中管理）===
+binance:
+  rest:
+    testnet: "https://testnet.binancefuture.com"
+    mainnet: "https://fapi.binance.com"
+  ws:
+    market:
+      testnet: "wss://stream.binancefuture.com/ws"
+      mainnet: "wss://fstream.binance.com/stream"
+    account:
+      testnet: "wss://stream.binancefuture.com/ws"
+      mainnet: "wss://fstream.binance.com/ws"
+  api_key: "${BINANCE_API_KEY}"
+  api_secret: "${BINANCE_API_SECRET}"
+  permissions: ["read"]
+
+# === WebSocket ===
+ws:
+  ping_interval: 180
+  reconnect_delay: 3
+  reconnect_backoff: 2.0
+  max_reconnect_delay: 300
+  stream_limit: 200
+
+# === 启动阶段 REST ===
+bootstrap:
+  kline_bars: 100
+  rate_limit: 120
+  timeframes: ["1m", "1h", "4h", "1d", "1w"]
+
+# === 扫描 ===
+scan:
+  symbols_limit: 527
+  interval_seconds: 900
+  batch_size: 50
+
+# === 分区管理 ===
+zones:
+  ambush:
+    score_threshold: 65
+    consecutive_periods: 3
+    oi_cvd_hours: 4
+    states: ["building", "loading", "ready"]
+  realtime:
+    large_weight: 0.6
+    small_weight: 0.4
+    thresholds:
+      p0: 85
+      p1: 70
+      p2: 60
+    batch_window: 30
+
+# === 大级别模式权重 ===
+large_patterns:
+  accumulation: 20
+  distribution: 20
+  oi_divergence_top: 15
+  oi_divergence_bottom: 15
+  cvd_divergence_pos: 15
+  cvd_divergence_neg: 15
+  mtf_resonance_long: 20
+  mtf_resonance_short: 20
+  whale_track: 10
+  liquidation_cascade: 15
+  oi_price_fall: 12
+  oi_price_rise: 12
+  funding_extreme: 8
+
+# === 秒级模式权重 ===
+second_patterns:
+  volume_sweep: 25
+  crash_dump: 25
+  whale_trade: 20
+  book_imbalance: 15
+  resistance_break: 20
+  support_test: 20
+
+# === 秒级阈值 ===
+second_thresholds:
+  volume_sweep_ratio: 3.0
+  crash_dump_pct: 2.0
+  whale_trade_min: 50000
+  book_imbalance_ratio: 3.0
+  resistance_break_bars: 5
+  support_test_bars: 3
+
+# === DeepSeek AI ===
+ai:
+  provider: "deepseek"
+  model: "deepseek-chat"
+  api_key: "${DEEPSEEK_PRO_KEY}"
+  api_base: "https://api.deepseek.com/v1"
+  max_tokens: 1200
+  temperature: 0.3
+  analysis_threshold: "p1"
+
+# === 飞书推送 ===
+feishu:
+  webhook_url: "${FEISHU_WEBHOOK_URL}"
+  heartbeat_interval: 300
+  rate_limits:
+    p0_per_symbol: 300
+    p1_per_symbol: 900
+
+# === 存储 ===
+storage:
+  db_path: "sentinel/sentinel.db"
+  kline_1m_retention_days: 365
+  kline_1s_retention_hours: 24
+  rsync_target: "C:\\Users\\29567\\smart-money-data\\"
+  rsync_time: "02:00"
+
+# === 仪表盘 ===
+dashboard:
+  host: "0.0.0.0"
+  port: 8888
+  ws_port: 8889
+  theme: "dark"
+
+# === 日志 ===
+logging:
+  level: "INFO"
+  dir: "sentinel/logs"
+  max_size_mb: 50
+  backup_count: 5

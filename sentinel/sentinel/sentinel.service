@@ -1,0 +1,18 @@
+[Unit]
+Description=Hermes Sentinel - Binance Monitoring System
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/smart-money-scanner
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/ubuntu/smart-money-scanner/.env
+ExecStart=/usr/bin/python3 /home/ubuntu/smart-money-scanner/sentinel.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/smart-money-scanner/sentinel/logs/sentinel.log
+StandardError=append:/home/ubuntu/smart-money-scanner/sentinel/logs/sentinel.log
+
+[Install]
+WantedBy=multi-user.target
